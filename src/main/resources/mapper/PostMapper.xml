@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.boards.mapper.PostMapper">
+
+    <resultMap id="PostResultMap" type="Post">
+        <id property="postId" column="post_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="authorId" column="author_id"/>
+        <result property="authorName" column="author_name"/>
+        <result property="isNotice" column="is_notice"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="fileCount" column="file_count"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="PostResultMap">
+        SELECT p.post_id, p.title, p.content, p.author_id, u.name as author_name,
+               p.is_notice, p.view_count, p.created_at, p.updated_at,
+               COALESCE(c.comment_count, 0) as comment_count,
+               COALESCE(f.file_count, 0) as file_count
+        FROM posts p
+        JOIN users u ON p.author_id = u.user_id
+        LEFT JOIN (
+            SELECT post_id, COUNT(*) as comment_count
+            FROM comments
+            GROUP BY post_id
+        ) c ON p.post_id = c.post_id
+        LEFT JOIN (
+            SELECT post_id, COUNT(*) as file_count
+            FROM file_attachments
+            GROUP BY post_id
+        ) f ON p.post_id = f.post_id
+        <where>
+            <if test="searchQuery != null and searchQuery != ''">
+                (p.title LIKE CONCAT('%', #{searchQuery}, '%') ESCAPE '\\'
+                OR u.name LIKE CONCAT('%', #{searchQuery}, '%') ESCAPE '\\')
+            </if>
+        </where>
+        ORDER BY p.is_notice DESC, p.created_at DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM posts p
+        <if test="searchQuery != null and searchQuery != ''">
+            JOIN users u ON p.author_id = u.user_id
+            WHERE (p.title LIKE CONCAT('%', #{searchQuery}, '%') ESCAPE '\\'
+            OR u.name LIKE CONCAT('%', #{searchQuery}, '%') ESCAPE '\\')
+        </if>
+    </select>
+
+    <select id="findById" resultMap="PostResultMap">
+        SELECT p.post_id, p.title, p.content, p.author_id, u.name as author_name,
+               p.is_notice, p.view_count, p.created_at, p.updated_at
+        FROM posts p
+        JOIN users u ON p.author_id = u.user_id
+        WHERE p.post_id = #{postId}
+    </select>
+
+    <insert id="insertPost" useGeneratedKeys="true" keyProperty="postId">
+        INSERT INTO posts (title, content, author_id, is_notice)
+        VALUES (#{title}, #{content}, #{authorId}, #{isNotice})
+    </insert>
+
+    <update id="updatePost">
+        UPDATE posts
+        SET title = #{title}, content = #{content}, is_notice = #{isNotice}
+        WHERE post_id = #{postId}
+    </update>
+
+    <delete id="deletePost">
+        DELETE FROM posts WHERE post_id = #{postId}
+    </delete>
+
+    <update id="incrementViewCount">
+        UPDATE posts
+        SET view_count = view_count + 1
+        WHERE post_id = #{postId}
+    </update>
+
+    <update id="updateExcelFile">
+        UPDATE posts
+        SET excel_filename = #{excelFilename},
+            excel_stored_filename = #{excelStoredFilename},
+            excel_file_path = #{excelFilePath},
+            excel_file_size = #{excelFileSize}
+        WHERE post_id = #{postId}
+    </update>
+
+    <update id="deleteExcelFile">
+        UPDATE posts
+        SET excel_filename = NULL,
+            excel_stored_filename = NULL,
+            excel_file_path = NULL,
+            excel_file_size = NULL
+        WHERE post_id = #{postId}
+    </update>
+
+</mapper>

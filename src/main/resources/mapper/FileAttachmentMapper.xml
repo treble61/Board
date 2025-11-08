@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.boards.mapper.FileAttachmentMapper">
+
+    <resultMap id="FileAttachmentResultMap" type="FileAttachment">
+        <id property="fileId" column="file_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="originalFilename" column="original_filename"/>
+        <result property="storedFilename" column="stored_filename"/>
+        <result property="filePath" column="file_path"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="contentType" column="content_type"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByPostId" resultMap="FileAttachmentResultMap">
+        SELECT file_id, post_id, original_filename, stored_filename, file_path,
+               file_size, content_type, created_at
+        FROM file_attachments
+        WHERE post_id = #{postId}
+        ORDER BY created_at ASC
+    </select>
+
+    <select id="findById" resultMap="FileAttachmentResultMap">
+        SELECT file_id, post_id, original_filename, stored_filename, file_path,
+               file_size, content_type, created_at
+        FROM file_attachments
+        WHERE file_id = #{fileId}
+    </select>
+
+    <insert id="insertFile" useGeneratedKeys="true" keyProperty="fileId">
+        INSERT INTO file_attachments (post_id, original_filename, stored_filename, file_path, file_size, content_type)
+        VALUES (#{postId}, #{originalFilename}, #{storedFilename}, #{filePath}, #{fileSize}, #{contentType})
+    </insert>
+
+    <delete id="deleteFile">
+        DELETE FROM file_attachments WHERE file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteByPostId">
+        DELETE FROM file_attachments WHERE post_id = #{postId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,929 @@
+.post-detail-container {
+  background: white;
+  min-height: 100vh;
+  padding: 8px 0 0 0;
+}
+
+/* Header (same as PostList) */
+.board-header {
+  background: white;
+  border-bottom: 0.8px solid rgba(0, 0, 0, 0.1);
+  padding: 0 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.logo-text h1 {
+  font-size: 18px;
+  line-height: 28px;
+  color: #0a0a0a;
+  margin: 0;
+  font-weight: 400;
+}
+
+.logo-text p {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a7282;
+  margin: 0;
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-icon {
+  color: #0a0a0a;
+}
+
+.user-name {
+  font-size: 16px;
+  line-height: 24px;
+  color: #0a0a0a;
+  font-weight: 400;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Main Content */
+.board-main {
+  background: #f9fafb;
+  padding: 16px;
+  min-height: calc(100vh - 72px);
+}
+
+/* Back Button */
+.back-button {
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 12px;
+  margin-bottom: 16px;
+}
+
+.back-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.back-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Post Card */
+.post-card {
+  background: white;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* Badges */
+.post-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.8px 8.8px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  height: 21.587px;
+  box-sizing: border-box;
+}
+
+.badge-free {
+  background: #dbeafe;
+  color: #193cb8;
+  border: 0.8px solid rgba(0, 0, 0, 0);
+}
+
+.badge-notice {
+  background: #ffe2e2;
+  color: #9f0712;
+  border: 0.8px solid rgba(0, 0, 0, 0);
+}
+
+.badge-status {
+  background: #030213;
+  color: white;
+  border: 0.8px solid rgba(0, 0, 0, 0);
+}
+
+/* Post Title */
+.post-title {
+  font-size: 24px;
+  line-height: 36px;
+  color: #0a0a0a;
+  margin: 0 0 16px 0;
+  font-weight: 400;
+}
+
+/* Meta Info */
+.post-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #4a5565;
+  font-weight: 400;
+}
+
+/* Action Buttons (Edit/Delete) */
+.post-action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.action-btn {
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.edit-btn {
+  background: white;
+  color: #0a0a0a;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn:hover {
+  background: #f9fafb;
+}
+
+.delete-btn {
+  background: #D4183D;
+  color: white;
+  border: none;
+}
+
+.delete-btn:hover {
+  background: #b01533;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Modal Dialog (Figma 디자인에 맞춤) */
+.modal-dialog {
+  width: 512px;
+  background: white;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 700;
+  color: #0a0a0a;
+  margin: 0;
+}
+
+.modal-description {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #717182;
+  margin: 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-button {
+  padding: 8px 16px !important;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 36px !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.modal-button.cancel-button {
+  background: white;
+  color: #0a0a0a;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+}
+
+.modal-button.cancel-button:hover {
+  background: #f9fafb;
+}
+
+.modal-button.delete-button {
+  background: #030213;
+  color: white;
+  border: none;
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+}
+
+.modal-button.delete-button:hover {
+  background: #1a1a2e;
+}
+
+.meta-item svg {
+  width: 16px;
+  height: 16px;
+  color: #4a5565;
+}
+
+/* Divider */
+.divider {
+  height: 0.8px;
+  background: rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+/* Post Content */
+.post-content {
+  font-size: 16px;
+  line-height: 24px;
+  color: #0a0a0a;
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+.content-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 16px;
+}
+
+/* content 내의 이미지 스타일 */
+.content-text img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+}
+
+.content-image-wrapper {
+  width: 100%;
+  max-width: 800px;
+}
+
+.content-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.content-image:hover {
+  opacity: 0.9;
+}
+
+/* Post Attachments */
+.post-attachments {
+  padding-top: 24px;
+  border-top: 0.8px solid rgba(0, 0, 0, 0.1);
+}
+
+.attachments-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 500;
+  margin: 0 0 12px 0;
+}
+
+.attachments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.attachment-item:hover {
+  background: #f3f3f5;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.attachment-item svg {
+  color: #6a7282;
+  flex-shrink: 0;
+}
+
+.attachment-name {
+  flex: 1;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-size {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a7282;
+  font-weight: 400;
+}
+
+/* Excel File Section */
+.post-excel-section {
+  padding-top: 24px;
+  border-top: 0.8px solid rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
+}
+
+.excel-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 500;
+  margin: 0 0 12px 0;
+}
+
+.excel-file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.excel-file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f0fdf4;
+  border: 1.5px solid #217346;
+  border-radius: 8px;
+}
+
+.excel-file-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.excel-filename {
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 500;
+}
+
+.excel-filesize {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a7282;
+  font-weight: 400;
+}
+
+.excel-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.excel-btn {
+  height: 36px;
+  border-radius: 8px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.excel-btn.download-btn {
+  background: #217346;
+  color: white;
+}
+
+.excel-btn.download-btn:hover {
+  background: #1a5c38;
+}
+
+.excel-btn.delete-btn {
+  background: #D4183D;
+  color: white;
+}
+
+.excel-btn.delete-btn:hover {
+  background: #b01533;
+}
+
+.excel-upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.excel-upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #217346;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.excel-upload-btn:hover {
+  background: #1a5c38;
+}
+
+.excel-upload-btn.uploading {
+  background: #6a7282;
+  cursor: not-allowed;
+}
+
+.excel-upload-hint {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a7282;
+  margin: 0;
+}
+
+/* Comments Section */
+.comments-section {
+  background: white;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.comments-title {
+  font-size: 16px;
+  line-height: 24px;
+  color: #0a0a0a;
+  font-weight: 400;
+  margin: 0 0 16px 0;
+}
+
+/* Comment Input */
+.comment-input-container {
+  margin-bottom: 24px;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  background: #f9fafb;
+  border: 0.8px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+.comment-input::placeholder {
+  color: #717182;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.2);
+  background: white;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-author {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a7282;
+  font-weight: 400;
+}
+
+.comment-submit-btn {
+  background: #6a7282;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  height: 36px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.comment-submit-btn:hover {
+  background: #4a5565;
+}
+
+.comment-submit-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Empty Comments */
+.comments-empty {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.comments-empty p {
+  font-size: 14px;
+  line-height: 20px;
+  color: #6a7282;
+  font-weight: 400;
+}
+
+/* Comments List */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comment-item {
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 0.8px solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.comment-author-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.comment-author-name {
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 500;
+}
+
+.comment-date {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a7282;
+  font-weight: 400;
+}
+
+.comment-delete-btn {
+  background: transparent;
+  color: #fb2c36;
+  border: none;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.comment-delete-btn:hover {
+  background: rgba(251, 44, 54, 0.1);
+}
+
+.comment-content {
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
+  font-weight: 400;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .board-header {
+    padding: 0 12px;
+    height: 56px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .logo-text h1 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .logo-text p {
+    display: none;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .board-main {
+    padding: 12px;
+  }
+
+  .post-card {
+    padding: 16px;
+  }
+
+  .post-title {
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .post-meta {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .post-action-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+
+  .modal-dialog {
+    width: calc(100% - 32px);
+    max-width: 400px;
+    margin: 0 16px;
+  }
+
+  .modal-button {
+    font-size: 13px;
+  }
+
+  .comments-section {
+    padding: 16px;
+  }
+
+  .comment-input {
+    min-height: 60px;
+  }
+
+  .excel-actions {
+    flex-direction: column;
+  }
+
+  .excel-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .board-header {
+    padding: 0 8px;
+    height: 52px;
+  }
+
+  .logo-text h1 {
+    font-size: 14px;
+  }
+
+  .board-main {
+    padding: 8px;
+  }
+
+  .back-button {
+    font-size: 13px;
+    padding: 0 8px;
+    height: 32px;
+  }
+
+  .post-card {
+    padding: 12px;
+  }
+
+  .post-title {
+    font-size: 18px;
+    line-height: 26px;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .meta-item {
+    font-size: 12px;
+  }
+
+  .post-content {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .comments-section {
+    padding: 12px;
+  }
+
+  .comments-title {
+    font-size: 14px;
+  }
+
+  .comment-input {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .comment-submit-btn {
+    font-size: 13px;
+    height: 32px;
+    padding: 0 12px;
+  }
+
+  .comment-item {
+    padding: 12px;
+  }
+
+  .comment-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .modal-dialog {
+    width: calc(100% - 24px);
+    padding: 20px;
+    margin: 0 12px;
+  }
+
+  .modal-title {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .modal-description {
+    font-size: 13px;
+  }
+}

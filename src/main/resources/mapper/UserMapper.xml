@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.boards.mapper.UserMapper">
+
+    <insert id="insertUser">
+        INSERT INTO users (user_id, password, name, email)
+        VALUES (#{userId}, #{password}, #{name}, #{email})
+    </insert>
+
+    <select id="findByUserId" resultType="User">
+        SELECT user_id, password, name, email, created_at, password_changed_at
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findByUserIdAndPassword" resultType="User">
+        SELECT user_id, password, name, email, created_at, password_changed_at
+        FROM users
+        WHERE user_id = #{userId} AND password = #{password}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE users
+        SET password = #{password}, password_changed_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>
