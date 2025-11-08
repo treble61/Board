@@ -5,18 +5,21 @@ import com.example.boards.dto.LoginRequest;
 import com.example.boards.dto.SignupRequest;
 import com.example.boards.mapper.UserMapper;
 import com.example.boards.model.User;
+import com.example.boards.service.RateLimiterService;
 import com.example.boards.service.UserService;
+import com.example.boards.util.IpAddressUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -25,8 +28,19 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RateLimiterService rateLimiterService;
+
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest request, HttpServletRequest httpRequest) {
+        // Rate limiting check
+        String clientIp = IpAddressUtil.getClientIpAddress(httpRequest);
+        if (!rateLimiterService.allowSignup(clientIp)) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "너무 많은 회원가입 시도가 있었습니다. 잠시 후 다시 시도해주세요.");
+            return ResponseEntity.status(429).body(error);
+        }
+
         try {
             userService.signup(request);
             Map<String, String> response = new HashMap<>();
@@ -40,7 +54,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, HttpSession session, HttpServletRequest httpRequest) {
+        // Rate limiting check
+        String clientIp = IpAddressUtil.getClientIpAddress(httpRequest);
+        if (!rateLimiterService.allowLogin(clientIp)) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "너무 많은 로그인 시도가 있었습니다. 15분 후 다시 시도해주세요.");
+            return ResponseEntity.status(429).body(error);
+        }
+
         try {
             User user = userService.login(request);
             session.setAttribute("userId", user.getUserId());
@@ -87,7 +109,15 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, HttpSession session) {
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request, HttpSession session, HttpServletRequest httpRequest) {
+        // Rate limiting check
+        String clientIp = IpAddressUtil.getClientIpAddress(httpRequest);
+        if (!rateLimiterService.allowPasswordChange(clientIp)) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "너무 많은 비밀번호 변경 시도가 있었습니다. 15분 후 다시 시도해주세요.");
+            return ResponseEntity.status(429).body(error);
+        }
+
         try {
             String userId = (String) session.getAttribute("userId");
             if (userId == null) {

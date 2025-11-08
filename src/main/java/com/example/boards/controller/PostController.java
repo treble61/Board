@@ -3,6 +3,7 @@ package com.example.boards.controller;
 import com.example.boards.model.Post;
 import com.example.boards.service.PostService;
 import com.example.boards.util.ExcelValidator;
+import com.example.boards.util.FilePathSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -27,7 +28,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/posts")
-@CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
 
     @Autowired
@@ -220,9 +220,9 @@ public class PostController {
                 System.out.println("기존 엑셀 파일 삭제: " + oldFilePath.toString());
             }
 
-            // Save new file
-            String storedFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-            Path filePath = Paths.get(uploadDir, storedFilename);
+            // Save new file with path traversal protection
+            Path filePath = FilePathSanitizer.sanitizeFilePath(uploadDir, originalFilename);
+            String storedFilename = filePath.getFileName().toString();
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("엑셀 파일 저장 완료: " + filePath.toString());
 
@@ -247,9 +247,17 @@ public class PostController {
 
     // Excel file download
     @GetMapping("/{postId}/excel/download")
-    public ResponseEntity<?> downloadExcel(@PathVariable Long postId) {
+    public ResponseEntity<?> downloadExcel(@PathVariable Long postId, HttpSession session) {
         System.out.println("=== 엑셀 파일 다운로드 ===");
         System.out.println("postId: " + postId);
+
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            System.out.println("ERROR: 로그인 필요");
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(error);
+        }
 
         Post post = postService.getPostById(postId);
         if (post.getExcelStoredFilename() == null) {
@@ -257,6 +265,14 @@ public class PostController {
             Map<String, String> error = new HashMap<>();
             error.put("error", "업로드된 엑셀 파일이 없습니다.");
             return ResponseEntity.notFound().build();
+        }
+
+        // AUTHORIZATION CHECK: Verify user owns the post
+        if (!post.getAuthorId().equals(userId)) {
+            System.out.println("ERROR: 권한 없음");
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "엑셀 파일 다운로드 권한이 없습니다.");
+            return ResponseEntity.status(403).body(error);
         }
 
         try {

@@ -3,6 +3,7 @@ package com.example.boards.controller;
 import com.example.boards.model.FileAttachment;
 import com.example.boards.service.FileAttachmentService;
 import com.example.boards.util.ExcelValidator;
+import com.example.boards.util.FilePathSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -27,11 +28,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/files")
-@CrossOrigin(origins = "http://localhost:3000")
 public class FileController {
 
     @Autowired
     private FileAttachmentService fileAttachmentService;
+
+    @Autowired
+    private com.example.boards.service.PostService postService;
 
     private final String uploadDir = "uploads";
 
@@ -115,8 +118,9 @@ public class FileController {
         }
 
         try {
-            String storedFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-            Path filePath = Paths.get(uploadDir, storedFilename);
+            // Path traversal protection
+            Path filePath = FilePathSanitizer.sanitizeFilePath(uploadDir, originalFilename);
+            String storedFilename = filePath.getFileName().toString();
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("파일 저장 완료: " + filePath.toString());
 
@@ -142,11 +146,27 @@ public class FileController {
     }
 
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId,
-                                                  @RequestParam(required = false, defaultValue = "false") boolean inline) {
+    public ResponseEntity<?> downloadFile(@PathVariable Long fileId,
+                                         @RequestParam(required = false, defaultValue = "false") boolean inline,
+                                         HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(error);
+        }
+
         FileAttachment fileAttachment = fileAttachmentService.getFileById(fileId);
         if (fileAttachment == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        // AUTHORIZATION CHECK: Verify user owns the post
+        com.example.boards.model.Post post = postService.getPostById(fileAttachment.getPostId());
+        if (post == null || !post.getAuthorId().equals(userId)) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "파일 다운로드 권한이 없습니다.");
+            return ResponseEntity.status(403).body(error);
         }
 
         try {
