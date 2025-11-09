@@ -147,6 +147,102 @@ form {
   height: 16px;
 }
 
+/* Success Container */
+.success-container {
+  padding: 40px 24px 24px 24px;
+  text-align: center;
+}
+
+.success-icon {
+  margin-bottom: 20px;
+}
+
+.success-icon svg {
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.success-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #10b981;
+  margin: 0 0 12px 0;
+}
+
+.success-message {
+  font-size: 14px;
+  color: #374151;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+}
+
+.success-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #eff6ff;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.success-info svg {
+  flex-shrink: 0;
+}
+
+.success-info span {
+  font-size: 13px;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.success-actions .btn-primary {
+  width: 100%;
+  height: 36px;
+  padding: 0;
+  background: #030213;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-actions .btn-primary:hover {
+  background: #1a1a2e;
+}
+
+.success-actions .btn-link {
+  background: transparent;
+  border: none;
+  color: #667eea;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.success-actions .btn-link:hover {
+  color: #764ba2;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .signup-container {

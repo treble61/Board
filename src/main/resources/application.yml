@@ -10,6 +10,32 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
 
+  # 이메일 설정
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    default-encoding: UTF-8
+
+  # 비동기 처리 설정 (이메일 발송용)
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+        queue-capacity: 100
+
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.example.boards.model
@@ -33,3 +59,15 @@ cors:
 file:
   upload:
     directory: ${FILE_UPLOAD_DIR:uploads}
+
+# 애플리케이션 커스텀 설정
+app:
+  mail:
+    # 발신자 이메일
+    from: ${MAIL_FROM:noreply@example.com}
+    # 이메일 인증 설정
+    verification:
+      # 토큰 만료 시간 (시간 단위)
+      expiry-hours: ${MAIL_VERIFICATION_EXPIRY_HOURS:24}
+      # 프론트엔드 베이스 URL
+      base-url: ${APP_BASE_URL:http://localhost:3000}

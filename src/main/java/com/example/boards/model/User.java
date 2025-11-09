@@ -9,6 +9,8 @@ public class User {
     private String password;
     private String name;
     private String email;
+    private Boolean emailVerified;
+    private Date emailVerifiedAt;
     private Date createdAt;
     private Date passwordChangedAt;
 }

@@ -8,10 +8,14 @@ function Login() {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [emailVerificationRequired, setEmailVerificationRequired] = useState(false);
   const history = useHistory();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+    setEmailVerificationRequired(false);
+
     try {
       const response = await axios.post('/api/users/login', {
         userId,
@@ -20,8 +24,18 @@ function Login() {
       console.log('로그인 성공:', response.data);
       history.push('/posts');
     } catch (err) {
-      setError(err.response?.data?.error || '로그인에 실패했습니다.');
+      // 이메일 미인증 에러 처리 (403 Forbidden)
+      if (err.response?.status === 403 && err.response?.data?.emailVerificationRequired) {
+        setEmailVerificationRequired(true);
+        setError(err.response.data.error || '이메일 인증이 필요합니다.');
+      } else {
+        setError(err.response?.data?.error || '로그인에 실패했습니다.');
+      }
     }
+  };
+
+  const handleResendEmail = () => {
+    history.push('/resend-verification');
   };
 
   const handleTabChange = (tab) => {
@@ -77,7 +91,16 @@ function Login() {
             />
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className={`error-message ${emailVerificationRequired ? 'email-verification-error' : ''}`}>
+              {error}
+              {emailVerificationRequired && (
+                <button onClick={handleResendEmail} className="resend-link">
+                  인증 이메일 재발송
+                </button>
+              )}
+            </div>
+          )}
 
           <button type="submit" className="login-button">
             <svg className="button-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

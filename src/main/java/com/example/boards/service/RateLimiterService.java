@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Login: 5 attempts per 15 minutes per IP
  * - Signup: 3 attempts per hour per IP
  * - Password Change: 3 attempts per 15 minutes per IP
+ * - Email Verification: 10 attempts per hour per IP
+ * - Resend Verification: 3 attempts per hour per email
  */
 @Service
 public class RateLimiterService {
@@ -24,6 +26,8 @@ public class RateLimiterService {
     private final Map<String, Bucket> loginBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> signupBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> passwordChangeBuckets = new ConcurrentHashMap<>();
+    private final Map<String, Bucket> emailVerificationBuckets = new ConcurrentHashMap<>();
+    private final Map<String, Bucket> resendVerificationBuckets = new ConcurrentHashMap<>();
 
     /**
      * Check if login attempt is allowed for this IP
@@ -83,6 +87,44 @@ public class RateLimiterService {
     }
 
     /**
+     * Check if email verification attempt is allowed for this IP
+     * Limit: 10 attempts per hour
+     */
+    public boolean allowEmailVerification(String identifier) {
+        Bucket bucket = emailVerificationBuckets.computeIfAbsent(identifier, k -> createEmailVerificationBucket());
+        return bucket.tryConsume(1);
+    }
+
+    /**
+     * Check if resend verification email is allowed for this email
+     * Limit: 3 attempts per hour
+     */
+    public boolean allowResendVerification(String identifier) {
+        Bucket bucket = resendVerificationBuckets.computeIfAbsent(identifier, k -> createResendVerificationBucket());
+        return bucket.tryConsume(1);
+    }
+
+    /**
+     * Create bucket for email verification attempts: 10 tokens, refill 10 tokens every hour
+     */
+    private Bucket createEmailVerificationBucket() {
+        Bandwidth limit = Bandwidth.classic(10, Refill.intervally(10, Duration.ofHours(1)));
+        return Bucket4j.builder()
+                .addLimit(limit)
+                .build();
+    }
+
+    /**
+     * Create bucket for resend verification attempts: 3 tokens, refill 3 tokens every hour
+     */
+    private Bucket createResendVerificationBucket() {
+        Bandwidth limit = Bandwidth.classic(3, Refill.intervally(3, Duration.ofHours(1)));
+        return Bucket4j.builder()
+                .addLimit(limit)
+                .build();
+    }
+
+    /**
      * Reset rate limit for a specific identifier and endpoint
      * Useful for testing or manual intervention
      */
@@ -97,6 +139,12 @@ public class RateLimiterService {
             case "password":
                 passwordChangeBuckets.remove(identifier);
                 break;
+            case "email-verification":
+                emailVerificationBuckets.remove(identifier);
+                break;
+            case "resend-verification":
+                resendVerificationBuckets.remove(identifier);
+                break;
         }
     }
 
@@ -108,5 +156,7 @@ public class RateLimiterService {
         loginBuckets.clear();
         signupBuckets.clear();
         passwordChangeBuckets.clear();
+        emailVerificationBuckets.clear();
+        resendVerificationBuckets.clear();
     }
 }

@@ -8,13 +8,19 @@
     </insert>
 
     <select id="findByUserId" resultType="User">
-        SELECT user_id, password, name, email, created_at, password_changed_at
+        SELECT user_id, password, name, email, email_verified, email_verified_at, created_at, password_changed_at
         FROM users
         WHERE user_id = #{userId}
     </select>
 
+    <select id="findByEmail" resultType="User">
+        SELECT user_id, password, name, email, email_verified, email_verified_at, created_at, password_changed_at
+        FROM users
+        WHERE email = #{email}
+    </select>
+
     <select id="findByUserIdAndPassword" resultType="User">
-        SELECT user_id, password, name, email, created_at, password_changed_at
+        SELECT user_id, password, name, email, email_verified, email_verified_at, created_at, password_changed_at
         FROM users
         WHERE user_id = #{userId} AND password = #{password}
     </select>
@@ -22,6 +28,12 @@
     <update id="updatePassword">
         UPDATE users
         SET password = #{password}, password_changed_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateEmailVerified">
+        UPDATE users
+        SET email_verified = TRUE, email_verified_at = CURRENT_TIMESTAMP
         WHERE user_id = #{userId}
     </update>
 

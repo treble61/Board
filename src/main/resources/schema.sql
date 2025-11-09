@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(64) NOT NULL,
     name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
+    email_verified BOOLEAN DEFAULT FALSE,
+    email_verified_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     password_changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -56,3 +58,20 @@ CREATE INDEX IF NOT EXISTS idx_comments_created_at ON comments(created_at DESC);
 
 -- 첨부파일 인덱스
 CREATE INDEX IF NOT EXISTS idx_file_attachments_post_id ON file_attachments(post_id);
+
+-- 이메일 인증 토큰 테이블
+CREATE TABLE IF NOT EXISTS email_verification_tokens (
+    token_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    verified_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 이메일 인증 토큰 인덱스
+CREATE INDEX IF NOT EXISTS idx_evt_token ON email_verification_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_evt_user_id ON email_verification_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_evt_expires_at ON email_verification_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_evt_user_verified ON email_verification_tokens(user_id, verified_at);
